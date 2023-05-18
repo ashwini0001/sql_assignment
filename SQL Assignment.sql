@@ -15,10 +15,10 @@ CREATE TABLE EmployeeDetails (
 
 -- insert sample data into EmployeeDetails
 INSERT INTO EmployeeDetails (EmpId, FullName, ManagerId, DateOfJoining, City)
-VALUES (1, 'Rahul', NULL, '2000-01-01', 'Pune'),
-       (2, 'Suraj', 1, '2020-02-15', 'Mumbai'),
-       (3, 'Sakshi', 1, '2017-02-15', 'Nashik'),
-       (4, 'ram', 1, '2015-03-05', 'Nashik');
+VALUES (1, 'Rahul', NULL, '2000-01-01', 'Kolkata'),
+       (2, 'Suraj', 1, '2020-02-15', 'Nagpur'),
+       (3, 'Sameer', 1, '2017-02-15', 'Mumbai'),
+       (4, 'ram', 1, '2020-03-05', 'Delhi');
 
 
  -- create EmployeeDetails table      
@@ -33,11 +33,11 @@ VALUES (1, 'Rahul', NULL, '2000-01-01', 'Pune'),
 
 -- insert sample data into EmployeeSalary
 INSERT INTO EmployeeSalary (EmpId, Project, Salary, Variable)
-VALUES (1, 'Project A', 5000.00, 1000.00),
-       (1, 'Project B', 4500.00, 900.00),
-       (2, 'Project A', 5500.00, 1100.00),
-       (2, 'Project C', 6000.00, 1200.00),
-       (3, 'Project B', 4000.00, 800.00);
+VALUES (1, 'Project 1', 9000.00, 700.00),
+       (1, 'Project 2', 7500.00, 800.00),
+       (2, 'Project 1', 7150.00, 900.00),
+       (2, 'Project 3', 9000.00, 1100.00),
+       (3, 'Project 2', 6800.00, 600.00);
 
 --1.SQL Query to fetch records that are present in one table but not in another table.
 SELECT EmployeeDetails.*
