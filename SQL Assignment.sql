@@ -1,103 +1,110 @@
-create database sqlAssignment;
-use sqlAssignment;
+create database Assignment1;
+use Assignment1;
 
---Create two tables: EmployeeDetails and EmployeeSalary.
---Columns for EmployeeDetails: EmpId FullName ManagerId DateOfJoining City && Columns for EmployeeSalary: : EmpId Project Salary Variable.Insert some sample data into both tables
 
--- create EmployeeDetails table
+-- Create two tables: EmployeeDetails and EmployeeSalary.
+
+-- Columns for EmployeeDetails: EmpId FullName ManagerId DateOfJoining City && Columns for EmployeeSalary: : EmpId Project Salary Variable.
+
 CREATE TABLE EmployeeDetails (
-  EmpId INT NOT NULL PRIMARY KEY,
-  FullName VARCHAR(255) NOT NULL,
-  ManagerId INT,
-  DateOfJoining DATE,
-  City VARCHAR(255)
+    EmpId INT PRIMARY KEY,
+    FullName VARCHAR(100),
+    ManagerId INT,
+    DateOfJoining DATE,
+    City VARCHAR(50)
 );
 
--- insert sample data into EmployeeDetails
+CREATE TABLE EmployeeSalary (
+    EmpId INT PRIMARY KEY,
+    Project VARCHAR(100),
+    Salary DECIMAL(10, 2),
+    Variable DECIMAL(10, 2),
+    FOREIGN KEY (EmpId) REFERENCES EmployeeDetails(EmpId)
+);
+
+-- Inserting values into the EmployeeDetails table
+
 INSERT INTO EmployeeDetails (EmpId, FullName, ManagerId, DateOfJoining, City)
-VALUES (1, 'Rahul', NULL, '2000-01-01', 'Kolkata'),
-       (2, 'Suraj', 1, '2020-02-15', 'Nagpur'),
-       (3, 'Sameer', 1, '2017-02-15', 'Mumbai'),
-       (4, 'ram', 1, '2020-03-05', 'Delhi');
+VALUES
+    (1, 'Jim Halpert', Null, '2022-04-20', 'New York'),
+    (2, 'Andy Bernard', 1002, '2022-03-10', 'Los Angeles'),
+    (3, 'Pam Beesly', Null, '2022-01-01', 'Scranton'),
+    (4, 'Dwight Schrute', Null, '2022-01-15', 'Albuquerque'),
+    (5, 'Michael Scott', 1001, '2022-01-01', 'Scranton');
 
+-- Inserting values into the EmployeeSalary table
 
- -- create EmployeeDetails table      
-    CREATE TABLE EmployeeSalary (
-  EmpId INT NOT NULL,
-  Project VARCHAR(255) NOT NULL,
-  Salary DECIMAL(10, 2) NOT NULL,
-  Variable DECIMAL(10, 2),
-  PRIMARY KEY (EmpId, Project),
-  FOREIGN KEY (EmpId) REFERENCES EmployeeDetails(EmpId)
-);
-
--- insert sample data into EmployeeSalary
 INSERT INTO EmployeeSalary (EmpId, Project, Salary, Variable)
-VALUES (1, 'Project 1', 9000.00, 700.00),
-       (1, 'Project 2', 7500.00, 800.00),
-       (2, 'Project 1', 7150.00, 900.00),
-       (2, 'Project 3', 9000.00, 1100.00),
-       (3, 'Project 2', 6800.00, 600.00);
+VALUES
+    (1, 'Project 1', 10000.00, 1000.00),
+    (2, 'Project 2', 8000.00, 600.00),
+    (3, 'Project 3', 6500.00, 800.00),
+    (4, 'Project 4', 9500.00, 1200.00),
+    (5, 'Project 5', 15000.00, 2900.00);
 
---1.SQL Query to fetch records that are present in one table but not in another table.
-SELECT EmployeeDetails.*
-FROM EmployeeDetails
-LEFT JOIN EmployeeSalary ON EmployeeDetails.EmpId = EmployeeSalary.EmpId
-WHERE EmployeeSalary.EmpId IS NULL;
 
---2 SQL query to fetch all the employees who are not working on any project.
+-- SQL Query to fetch records that are present in one table but not in another table.
+
 SELECT *
 FROM EmployeeDetails
-WHERE EmpId NOT IN (
-  SELECT EmpId
-  FROM EmployeeSalary
-)
---3.SQL query to fetch all the Employees from EmployeeDetails who joined in the Year 2020.
+WHERE EmpId NOT IN (SELECT EmpId FROM EmployeeSalary);
+
+-- SQL query to fetch all the employees who are not working on any project.
+
 SELECT *
 FROM EmployeeDetails
-WHERE YEAR(DateOfJoining) = 2020
+WHERE EmpId NOT IN (SELECT EmpId FROM EmployeeSalary);
 
---4.Fetch all employees from EmployeeDetails who have a salary record in EmployeeSalary.
-SELECT ed.*
-FROM EmployeeDetails ed
-INNER JOIN EmployeeSalary es
-  ON ed.EmpId = es.EmpId
+-- SQL query to fetch all the Employees from EmployeeDetails who joined in the Year 2020.
 
---5.Write an SQL query to fetch a project-wise count of employees.
-SELECT Project, COUNT(EmpId) as NumEmployees
+SELECT *
+FROM EmployeeDetails
+WHERE YEAR(DateOfJoining) = 2020;
+
+-- Fetch all employees from EmployeeDetails who have a salary record in EmployeeSalary.
+
+SELECT *
+FROM EmployeeDetails
+WHERE EmpId IN (SELECT EmpId FROM EmployeeSalary);
+
+-- Write an SQL query to fetch a project-wise count of employees.
+
+SELECT Project, COUNT(*) AS EmployeeCount
 FROM EmployeeSalary
-GROUP BY Project
+GROUP BY Project;
 
---6.Fetch employee names and salaries even if the salary value is not present for the employee.
+-- Fetch employee names and salaries even if the salary value is not present for the employee.
+
 SELECT ed.FullName, es.Salary
 FROM EmployeeDetails ed
-LEFT JOIN EmployeeSalary es
-  ON ed.EmpId = es.EmpId
+LEFT JOIN EmployeeSalary es ON ed.EmpId = es.EmpId;
 
---7.Write an SQL query to fetch all the Employees who are also managers.
-SELECT e1.*
-FROM EmployeeDetails e1
-INNER JOIN EmployeeDetails e2
-  ON e1.EmpId = e2.ManagerId
---8.Write an SQL query to fetch duplicate records from EmployeeDetails.
-SELECT FullName, ManagerId, DateOfJoining, City, COUNT(*)
+-- Write an SQL query to fetch all the Employees who are also managers.
+
+SELECT *
 FROM EmployeeDetails
-GROUP BY FullName, ManagerId, DateOfJoining, City
-HAVING COUNT(*) > 1
+WHERE EmpId IN (SELECT ManagerId FROM EmployeeDetails);
 
---9.Write an SQL query to fetch only odd rows from the table.
+-- Write an SQL query to fetch duplicate records from EmployeeDetails.
+
+SELECT EmpId, FullName, ManagerId, DateOfJoining, City, COUNT(*) AS DuplicateCount
+FROM EmployeeDetails
+GROUP BY EmpId, FullName, ManagerId, DateOfJoining, City
+HAVING COUNT(*) > 1;
+
+-- Write an SQL query to fetch only odd rows from the table.
+
 SELECT *
 FROM (
-  SELECT *, ROW_NUMBER() OVER (ORDER BY EmpId) AS RowNum
-  FROM EmployeeDetails
+    SELECT *, ROW_NUMBER() OVER (ORDER BY (SELECT NULL)) AS RowNum
+    FROM YourTable
 ) AS T
-WHERE T.RowNum % 2 = 1
+WHERE T.RowNum % 2 <> 0;
 
---10.Write a query to find the 3rd highest salary from a table without top or limit keyword.
+-- Write a query to find the 3rd highest salary from a table without top or limit keyword.
+
 SELECT DISTINCT Salary
-FROM EmployeeSalary e1
-WHERE 3 = (
-  SELECT COUNT(DISTINCT Salary)
-  FROM EmployeeSalary e2
-  WHERE e2.Salary > e1.Salary
-);
+FROM EmployeeSalary
+ORDER BY Salary DESC
+OFFSET 2 ROWS FETCH NEXT 1 ROWS ONLY;
+
